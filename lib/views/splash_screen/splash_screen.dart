@@ -1,5 +1,5 @@
 import 'package:edu_admit/views/auth_screens/sign_up_screen.dart';
-import 'package:edu_admit/views/starting_pages/starting_page_one.dart';
+import 'package:edu_admit/views/starting_screen/starting_page_one.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
