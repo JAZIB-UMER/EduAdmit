@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:edu_admit/views/auth_screens/sign_up_screen.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:get/get.dart';
@@ -6,16 +9,12 @@ import 'package:get/get.dart';
 class OnBoardingController extends GetxController {
   static OnBoardingController get instance => Get.find();
 
-  // Variables
-  static final pageController = PageController();
-  Rx<int> currentPageIndex = 0.obs;
+  final carouselCurrentIndex = 0.obs;
 
-  // Update Current Index When Page Scroll
-  void updatePageIndicator(index) => currentPageIndex.value = index;
-
-  // Jump To Specific Dot Selected Page
-  void dotNavigationClick(index) {
-    currentPageIndex.value = index;
-    pageController.jumpTo(index);
+  void updatePageIndicator(index) {
+    carouselCurrentIndex.value = index;
+    if (carouselCurrentIndex.value == 3) {
+      Timer(Duration(seconds: 3), () => Get.offAll(SignUpScreen()));
+    }
   }
 }
