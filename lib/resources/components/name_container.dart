@@ -7,7 +7,8 @@ class NameContainer extends StatelessWidget {
   final String title;
   final Color colors;
   final Color textcolors;
-  const NameContainer({super.key,
+  const NameContainer({
+    super.key,
     required this.height,
     required this.width,
     required this.radius,
@@ -18,16 +19,19 @@ class NameContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Container(
-      height: height,
-      width: width,
+    return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(radius),
-
-        color:  colors,
+        color: colors,
       ),
-      child: Center(child: Text(title, style: Theme.of(context)
-          .textTheme.bodyMedium!.copyWith(color: textcolors,fontWeight: FontWeight.bold),)),
+      child: Center(
+          child: Text(
+        title,
+        style: Theme.of(context)
+            .textTheme
+            .bodyMedium!
+            .copyWith(color: textcolors, fontWeight: FontWeight.bold),
+      )),
     );
   }
 }

@@ -1,16 +1,28 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:edu_admit/views/splash_screen/splash_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'onboarding_controller.dart';
 
-class StartingScreen extends StatelessWidget {
+class StartingScreen extends StatefulWidget {
   const StartingScreen({Key? key});
 
   @override
+  State<StartingScreen> createState() => _StartingScreenState();
+}
+
+class _StartingScreenState extends State<StartingScreen> {
+  @override
   Widget build(BuildContext context) {
+    SplashServices _splashServices = SplashServices();
+
+    @override
+    void initState() {
+      _splashServices.isLogin(context);
+      super.initState();
+    }
+
     dynamic height = MediaQuery.of(context).size.height;
     dynamic width = MediaQuery.of(context).size.width;
     final controller = Get.put(OnBoardingController());
@@ -45,13 +57,18 @@ class StartingScreen extends StatelessWidget {
             children: [
               Align(
                 alignment: Alignment.topLeft,
-                child: Image(
-                  width: 300,
-                  height: 300,
-                  image: AssetImage(
-                    'assets/icons/edu_logo.png',
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: SizedBox(
+                    height: height * 0.2,
+                    width: width * 0.3,
+                    child: Image(
+                      image: AssetImage(
+                        'assets/icons/eduadmitlogo.png',
+                      ),
+                      color: Colors.white,
+                    ),
                   ),
-                  color: Colors.white,
                 ),
               ),
               Align(

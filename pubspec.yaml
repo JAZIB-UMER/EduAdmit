@@ -39,6 +39,15 @@ dependencies:
   smooth_page_indicator: ^1.1.0
   carousel_slider: ^4.2.1
   flutter_carousel_slider: ^1.1.0
+  firebase_auth: ^4.19.2
+  firebase_core: ^2.30.0
+  shared_preferences: ^2.2.3
+  cloud_firestore: ^4.17.0
+  firebase_database: ^10.4.6
+  firebase_storage: ^11.6.7
+  flutter_native_splash: ^2.4.0
+  another_flushbar: ^1.12.30
+  fluttertoast: ^8.2.4
 
 dev_dependencies:
   flutter_test:

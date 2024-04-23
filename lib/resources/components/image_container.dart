@@ -6,7 +6,8 @@ class ImageContainer extends StatelessWidget {
   final double radius;
   final String image;
   final VoidCallback onPress;
-  const ImageContainer ({super.key,
+  const ImageContainer({
+    super.key,
     required this.height,
     required this.width,
     required this.radius,
@@ -29,7 +30,7 @@ class ImageContainer extends StatelessWidget {
               color: const Color(0xffD8D8D8), // Color of the border
               width: 0, // Width of the border
             ),
-            color: const  Color(0xffF43C3E),
+            color: const Color(0xffF43C3E),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

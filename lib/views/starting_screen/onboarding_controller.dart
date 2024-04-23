@@ -14,7 +14,7 @@ class OnBoardingController extends GetxController {
   void updatePageIndicator(index) {
     carouselCurrentIndex.value = index;
     if (carouselCurrentIndex.value == 3) {
-      Timer(Duration(seconds: 3), () => Get.offAll(SignUpScreen()));
+      Timer(Duration(seconds: 2), () => Get.offAll(SignUpScreen()));
     }
   }
 }

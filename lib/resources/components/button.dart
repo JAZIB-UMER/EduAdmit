@@ -6,12 +6,15 @@ class Button extends StatelessWidget {
   final double radius;
   final String title;
   final VoidCallback onPress;
-  const Button({super.key,
+  final bool loading;
+  const Button({
+    super.key,
     required this.height,
     required this.width,
     required this.radius,
     required this.title,
     required this.onPress,
+    required this.loading,
   });
 
   @override
@@ -23,10 +26,18 @@ class Button extends StatelessWidget {
         width: width,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(radius),
-
           color: const Color(0xffF43C3E),
         ),
-        child: Center(child: Text(title,style: const TextStyle(color: Colors.white,fontWeight: FontWeight.bold),)),
+        child: Center(
+            child: loading
+                ? const CircularProgressIndicator(
+                    color: Colors.white,
+                  )
+                : Text(
+                    title,
+                    style: const TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  )),
       ),
     );
   }
