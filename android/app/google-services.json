@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "167430437560",
+    "firebase_url": "https://eduadmit-803a1-default-rtdb.firebaseio.com",
+    "project_id": "eduadmit-803a1",
+    "storage_bucket": "eduadmit-803a1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:167430437560:android:579204e99f9f6da020124d",
+        "android_client_info": {
+          "package_name": "com.example.edu_admit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "167430437560-pki87dsjkp1m8fqr9mho8r1t3ao4fmae.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.edu_admit",
+            "certificate_hash": "148563d4518f9ed416b84ad8faf0e9428af3a654"
+          }
+        },
+        {
+          "client_id": "167430437560-4rvcq9p4krqin35dh4al66frvprj5ig3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDyxt0sx8CA2dxcL-gyzI0yCfaJhZ0OZn0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "167430437560-4rvcq9p4krqin35dh4al66frvprj5ig3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "167430437560-n8uref7oefhu0qle1o0fhplst69vgdjq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.eduAdmit"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
