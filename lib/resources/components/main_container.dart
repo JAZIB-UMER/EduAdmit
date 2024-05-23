@@ -1,22 +1,12 @@
-import 'package:edu_admit/views/description_screen/description_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:get/get.dart';
 
 class MainContainer extends StatelessWidget {
-  final double height;
-  final double width;
-  final double radius;
   final String image;
   final String title;
   final String subtitle;
   final VoidCallback onPress;
   const MainContainer({
     super.key,
-    required this.height,
-    required this.width,
-    required this.radius,
     required this.image,
     required this.title,
     required this.subtitle,
@@ -25,14 +15,14 @@ class MainContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     return InkWell(
-      onTap: () {
-        Get.to(DescriptionScreen());
-      },
+      onTap: onPress,
       child: Padding(
         padding: const EdgeInsets.only(right: 20, left: 20, bottom: 10),
         child: Container(
-          height: height,
+          padding: const EdgeInsets.all(8),
+          height: 120,
           width: width,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(6),
@@ -50,8 +40,9 @@ class MainContainer extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(width: 15),
-              Image.asset(image),
+              Hero(
+                  tag: title,
+                  child: SizedBox(height: 80, child: Image.network(image))),
               const SizedBox(width: 15),
               Expanded(
                 child: Column(
@@ -66,7 +57,7 @@ class MainContainer extends StatelessWidget {
                             .headlineSmall!
                             .copyWith(
                                 fontSize: 15, fontWeight: FontWeight.bold),
-                        maxLines: 2,
+                        maxLines: 5,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -74,6 +65,8 @@ class MainContainer extends StatelessWidget {
                       height: 6,
                     ),
                     Text(subtitle,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.bodySmall!.copyWith(
                             fontSize: 9,
                             fontWeight: FontWeight.bold,

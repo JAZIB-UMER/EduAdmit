@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class SigninScreenContainer extends StatelessWidget {
   final String title;
   final Icon icon;
+  final bool obscure;
   final TextEditingController controller;
 
   const SigninScreenContainer({
@@ -10,6 +11,7 @@ class SigninScreenContainer extends StatelessWidget {
     required this.title,
     required this.icon,
     required this.controller,
+    required this.obscure,
   });
 
   @override
@@ -23,12 +25,14 @@ class SigninScreenContainer extends StatelessWidget {
         width: width * 0.84,
         child: TextFormField(
           controller: controller,
+          obscureText: obscure,
           decoration: InputDecoration(
               hintText: title,
+              labelText: title,
               prefixIcon: icon,
               hintStyle: const TextStyle(fontSize: 15),
               focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Color(0xffD8D8D8)),
+                  borderSide: const BorderSide(color: Color(0xffF43C3E)),
                   borderRadius: BorderRadius.circular(16)),
               enabledBorder: OutlineInputBorder(
                   borderSide: const BorderSide(color: Color(0xffD8D8D8)),

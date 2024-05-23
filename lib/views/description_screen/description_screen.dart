@@ -1,14 +1,17 @@
+import 'package:edu_admit/data_model/universities_model.dart';
 import 'package:edu_admit/resources/components/button.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:edu_admit/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DescriptionScreen extends StatelessWidget {
   const DescriptionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    Admission admission = Get.arguments;
+
     dynamic height = MediaQuery.of(context).size.height;
     dynamic width = MediaQuery.of(context).size.width;
 
@@ -25,14 +28,13 @@ class DescriptionScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 50),
                     child: SizedBox(
-                        width: double.infinity,
-                        height: height * 0.4,
-                        child: const Image(
-                          image: AssetImage(
-                            'assets/icons/paf_bg.png',
-                          ),
-                          fit: BoxFit.fitHeight,
-                        )),
+                      width: double.infinity,
+                      height: height * 0.4,
+                      child: Image.network(
+                        admission.bgImage,
+                        fit: BoxFit.fitHeight,
+                      ),
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
@@ -44,7 +46,7 @@ class DescriptionScreen extends StatelessWidget {
                           onTap: () {
                             Get.back();
                           },
-                          child: CircleAvatar(
+                          child: const CircleAvatar(
                             backgroundColor: Colors.white,
                             child: Icon(Icons.arrow_back),
                           ),
@@ -54,39 +56,25 @@ class DescriptionScreen extends StatelessWidget {
                           width: 120,
                           child: Image.asset(
                             'assets/icons/eduadmitlogo.png',
-                            color: Colors.white,
+                            color: Colors.grey,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(
-                  //       vertical: 40, horizontal: 10),
-                  //   child: Align(
-                  //     alignment: Alignment.topLeft,
-                  //     child: InkWell(
-                  //       onTap: () {
-                  //         Get.back();
-                  //       },
-                  //       child: CircleAvatar(
-                  //         backgroundColor: Colors.white,
-                  //         child: Icon(Icons.arrow_back),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
                   Align(
                     alignment: Alignment.bottomCenter,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          border: Border.all(color: Colors.grey)),
-                      child: CircleAvatar(
-                        backgroundColor: Colors.white,
-                        backgroundImage:
-                            AssetImage('assets/icons/paf_logo.png'),
-                        radius: width * 0.15,
+                    child: Hero(
+                      tag: admission.name,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            border: Border.all(color: Colors.grey)),
+                        child: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          backgroundImage: NetworkImage(admission.logo),
+                          radius: width * 0.15,
+                        ),
                       ),
                     ),
                   ),
@@ -94,29 +82,40 @@ class DescriptionScreen extends StatelessWidget {
               ),
             ),
             //---------------
-            SizedBox(
+            const SizedBox(
               height: 2,
             ),
-            Text(
-              'Pak Austria Fachhocschule',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                textAlign: TextAlign.center,
+                admission.name,
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
             ),
-            Text(
-              'Mang, Haripur',
-              style: TextStyle(fontSize: 15),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                textAlign: TextAlign.center,
+                admission.location,
+                style: const TextStyle(fontSize: 10),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                'Registrations are open now',
+                'Admissions are ${admission.admission == true ? 'open' : 'closed'} now',
                 style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
-                    color: Colors.red),
+                    color: admission.admission == true
+                        ? Colors.green
+                        : Colors.red),
               ),
             ),
             //-----------------------
-            TabBar(
+            const TabBar(
                 labelColor: Colors.black,
                 padding: EdgeInsets.all(5),
                 indicatorColor: Colors.black,
@@ -133,30 +132,13 @@ class DescriptionScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'How to apply',
+                    'Contact',
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 14,
                     ),
                   ),
                 ]),
-            // Padding(
-            //   padding: const EdgeInsets.all(8.0),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //     children: [
-            //       Text(
-            //         'Description',
-            //         style: TextStyle(
-            //           fontWeight: FontWeight.bold,
-            //         ),
-            //       ),
-            //       Text('Scholarship'),
-            //       Text('How to Apply'),
-            //     ],
-            //   ),
-            //   //----------------
-            // ),
 
             Expanded(
               child: TabBarView(children: [
@@ -165,7 +147,7 @@ class DescriptionScreen extends StatelessWidget {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        Align(
+                        const Align(
                           alignment: Alignment.topLeft,
                           child: Text(
                             'About Us',
@@ -173,21 +155,10 @@ class DescriptionScreen extends StatelessWidget {
                                 fontWeight: FontWeight.bold, fontSize: 25),
                           ),
                         ),
-                        Text(
-                            "Pak-Austria Fachhochschule: Institute of Applied Sciences and Technology is located in a rapidly changing and fiercely competitive global environment, Pakistan has to make bold strategic choices in order to achieve sustainable growth in the manufacturing sector.Our vision is to emerge as an outstanding leader in imparting sound skill-oriented education and producing capable, diligent, and career-ready graduates to succeed in a globally interdependent society."),
-                        SizedBox(
+                        Text(admission.description),
+                        const SizedBox(
                           height: 20,
                         ),
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            'Requirements',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 25),
-                          ),
-                        ),
-                        Text(
-                            "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its 'Content here, content here', making it look like readable English. Many desktop publishing  many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like)."),
                       ],
                     ),
                   ),
@@ -197,63 +168,67 @@ class DescriptionScreen extends StatelessWidget {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        Align(
-                          alignment: Alignment.topLeft,
+                        const Align(
+                          alignment: Alignment.center,
                           child: Text(
-                            'About Us',
+                            'Reffer to the link below',
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 25),
+                                fontWeight: FontWeight.bold, fontSize: 15),
                           ),
                         ),
-                        Text(
-                            "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its 'Content here, content here', making it look like readable English. Many desktop publishing  many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like)."),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            'Requirements',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 25),
+                          alignment: Alignment.center,
+                          child: InkWell(
+                            onTap: () => launchUrl(Uri.parse(
+                                admission.scholarshipsLink.toString())),
+                            child: Text(
+                              admission.scholarshipsLink,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                  color: Colors.blue),
+                            ),
                           ),
                         ),
-                        Text(
-                            "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its 'Content here, content here', making it look like readable English. Many desktop publishing  many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like)."),
                       ],
                     ),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(20),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            'About Us',
+                  child: Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: ListTile(
+                          title: const Text(
+                            'Phone',
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 25),
+                                fontWeight: FontWeight.bold, fontSize: 15),
+                          ),
+                          leading: const Icon(Icons.phone_in_talk),
+                          trailing: Text(admission.phoneNo),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: ListTile(
+                          title: const Text(
+                            'Email',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 15),
+                          ),
+                          leading: const Icon(Icons.email_outlined),
+                          trailing: Text(
+                            admission.email,
+                            style: const TextStyle(color: Colors.blue),
                           ),
                         ),
-                        Text(
-                            "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its 'Content here, content here', making it look like readable English. Many desktop publishing  many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like)."),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            'Requirements',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 25),
-                          ),
-                        ),
-                        Text(
-                            "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its 'Content here, content here', making it look like readable English. Many desktop publishing  many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like)."),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ]),
@@ -263,13 +238,15 @@ class DescriptionScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Button(
                     height: height * 0.06,
                     title: 'Apply now',
                     radius: 4,
-                    onPress: () {},
+                    onPress: () async {
+                      await launchUrl(Uri.parse(admission.link));
+                    },
                     width: width * 0.66,
                     loading: false,
                   ),
@@ -280,9 +257,9 @@ class DescriptionScreen extends StatelessWidget {
                       width: width * 0.15,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4),
-                        color: const Color(0xffF43C3E),
+                        color: appThemeColor,
                       ),
-                      child: Center(
+                      child: const Center(
                           child: Icon(
                         Icons.bookmark_border,
                         color: Colors.white,

@@ -1,10 +1,21 @@
+import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edu_admit/data_model/scholarships_model.dart';
+import 'package:edu_admit/data_model/universities_model.dart';
+import 'package:edu_admit/data_model/user_model.dart';
 import 'package:edu_admit/resources/components/button.dart';
-import 'package:edu_admit/resources/components/image_container.dart';
 import 'package:edu_admit/resources/components/main_container.dart';
-import 'package:edu_admit/resources/components/main_screen_search_engin.dart';
-import 'package:edu_admit/resources/components/name_container.dart';
+import 'package:edu_admit/resources/drawer/drawer.dart';
+import 'package:connectivity/connectivity.dart';
+import 'package:edu_admit/services/data_services/firestore_services.dart';
+import 'package:edu_admit/services/notifications/notification_services.dart';
+import 'package:edu_admit/views/description_screen/description_screen.dart';
+import 'package:edu_admit/views/main_screens/components/components.dart';
+import 'package:edu_admit/views/plans_screen/packages_screen.dart';
+import 'package:edu_admit/views/scholarships_screen/scholarships_card.dart';
+import 'package:edu_admit/views/search_screen/search_screen.dart';
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
 import '../../services/auth_services/shared_pref_services.dart';
 
 class MainScreen extends StatefulWidget {
@@ -15,398 +26,281 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  dynamic userName = '';
+  NotificationServices notificationServices = NotificationServices();
+  late UserData userData;
+  bool _hasInternet = true;
 
   @override
   void initState() {
-    UserData userData = SharedPreferencesHelper().getData();
-
-    userName = userData.name;
-
     super.initState();
+    checkInternetConnection();
+    userData = SharedPreferencesHelper().getData();
+    notificationServices.requestNotificationPermission();
+    notificationServices.setupInteractMessage(context);
+    notificationServices.fireBaseInit(context);
+    notificationServices.getDeviceToken().then((value) {
+      debugPrint('Device Token : $value');
+    }).onError((error, stackTrace) {});
+    super.initState();
+  }
+
+  Future<void> checkInternetConnection() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      setState(() {
+        _hasInternet = false;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    List<Admission> admissions = [];
+    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     dynamic height = MediaQuery.of(context).size.height;
     dynamic width = MediaQuery.of(context).size.width;
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
-        body: Column(
-          children: [
-            SizedBox(
-              height: height * 0.16,
-              width: width * 0.95,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: 20,
-                    ),
-                    child: SizedBox(
-                      height: 120,
-                      width: 120,
-                      child: Image.asset(
-                        'assets/icons/eduadmitlogo.png',
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                  Button(
-                    height: 30,
-                    width: 50,
-                    radius: 0,
-                    title: 'ADS',
-                    onPress: () {},
-                    loading: false,
-                  ),
-                ],
+        appBar: AppBar(
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 20),
+              child: Button(
+                height: 30,
+                width: 100,
+                radius: 0,
+                title: 'Packages',
+                onPress: () => Get.to(() => const PackagesScreen()),
+                loading: false,
               ),
-            ),
-            SizedBox(
-              height: height * 0.04,
-              width: width * 0.9,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Hey, ",
-                    style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xffF43C3E)),
-                  ),
-                  Text(
-                    userName,
-                    style: Theme.of(context)
-                        .textTheme
-                        .headlineMedium!
-                        .copyWith(fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-                height: height * 0.04,
-                width: width * 0.9,
-                child: const NameContainer(
-                  height: 31,
-                  width: 127,
-                  radius: 2,
-                  title: "Student Account",
-                  colors: Colors.white,
-                  textcolors: Color(0xffB3B3B3),
-                )),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                const SearchEngin(title: " Search for an institute."),
-                ImageContainer(
-                    height: height * 0.07,
-                    width: 52,
-                    radius: 15,
-                    image: 'assets/icons/vector1.png',
-                    onPress: () {})
-              ],
-            ),
-            const SizedBox(height: 12),
-            TabBar(
-                tabAlignment: TabAlignment.center,
-                isScrollable: true,
-                indicator: BoxDecoration(
-                    color: Color(0xffF43C3E),
-                    borderRadius: BorderRadius.circular(3)),
-                indicatorSize: TabBarIndicatorSize.tab,
-                labelPadding:
-                    EdgeInsets.symmetric(horizontal: 16.0, vertical: 6),
-                dividerHeight: 0,
-                labelColor: Colors.white,
-                tabs: [
-                  Text(
-                    ' All ',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-                  ),
-                  Container(
-                      child: Text(
-                    textAlign: TextAlign.start,
-                    'Top Universities',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-                  )),
-                  Container(
-                      child: Text(
-                    'Opened Admissions',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-                  )),
-                ]),
-            // const Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //   children: [
-            //
-            //   ],
-            // ),
-            const SizedBox(height: 5),
-            Expanded(
-              child: TabBarView(children: [
-                ListView(
-                  scrollDirection: Axis.vertical,
-                  children: [
-                    MainContainer(
-                        height: 90,
-                        width: 350,
-                        radius: 6,
-                        image: "assets/icons/gik.png",
-                        title: "Ghulam Ishaq Khan",
-                        subtitle: "Topi, Khyber Pukhtunkhwa",
-                        onPress: () {}),
-                    MainContainer(
-                        height: 90,
-                        width: 350,
-                        radius: 6,
-                        image: "assets/icons/paf.png",
-                        title: "Pak Austria Fachhochschule ",
-                        subtitle: "Mang, Haripur",
-                        onPress: () {}),
-                    MainContainer(
-                        height: 90,
-                        width: 350,
-                        radius: 6,
-                        image: "assets/icons/malakand.png",
-                        title: "University of Malakand",
-                        subtitle: "Chakdara, Khyber Pakhtunkhwa",
-                        onPress: () {}),
-                    MainContainer(
-                        height: 90,
-                        width: 350,
-                        radius: 6,
-                        image: "assets/icons/hazara.png",
-                        title: "Hazara University",
-                        subtitle: "Mansehra, Khyber Pakhtunkhwa",
-                        onPress: () {}),
-                    MainContainer(
-                        height: 90,
-                        width: 350,
-                        radius: 6,
-                        image: "assets/icons/abdulwalikhan.png",
-                        title: "Abdul Wali Khan University",
-                        subtitle: "Mardan, Khyber Pakhtunkhwa",
-                        onPress: () {}),
-                    MainContainer(
-                        height: 90,
-                        width: 350,
-                        radius: 6,
-                        image: "assets/icons/qurtuba.png",
-                        title: "Qurtuba University",
-                        subtitle: "Peshawar, Khyber Pakhtunkhwa",
-                        onPress: () {}),
-                    MainContainer(
-                        height: 90,
-                        width: 350,
-                        radius: 6,
-                        image: "assets/icons/icu.png",
-                        title: "Islamia College University",
-                        subtitle: "Peshawar, Khyber Pakhtunkhwa",
-                        onPress: () {}),
-                    MainContainer(
-                        height: 90,
-                        width: 350,
-                        radius: 6,
-                        image: "assets/icons/swat.png",
-                        title: "University of Swat",
-                        subtitle: "Swat, Khyber Pakhtunkhwa",
-                        onPress: () {}),
-                    MainContainer(
-                        height: 90,
-                        width: 350,
-                        radius: 6,
-                        image: "assets/icons/iqra.png",
-                        title: "Iqra National University",
-                        subtitle: "Peshawar, Khyber Pakhtunkhwa",
-                        onPress: () {}),
-                    MainContainer(
-                        height: 90,
-                        width: 350,
-                        radius: 6,
-                        image: "assets/icons/gik.png",
-                        title: "Preston University",
-                        subtitle: "Peshawar, Khyber Pakhtunkhwa",
-                        onPress: () {}),
-                  ],
-                ),
-                ListView(
-                  scrollDirection: Axis.vertical,
-                  children: [
-                    MainContainer(
-                        height: 90,
-                        width: 350,
-                        radius: 6,
-                        image: "assets/icons/gik.png",
-                        title: "Ghulam Ishaq Khan",
-                        subtitle: "Topi, Khyber Pukhtunkhwa",
-                        onPress: () {}),
-                    MainContainer(
-                        height: 90,
-                        width: 350,
-                        radius: 6,
-                        image: "assets/icons/paf.png",
-                        title: "Pak Austria Fachhochschule ",
-                        subtitle: "Mang, Haripur",
-                        onPress: () {}),
-                    MainContainer(
-                        height: 90,
-                        width: 350,
-                        radius: 6,
-                        image: "assets/icons/malakand.png",
-                        title: "University of Malakand",
-                        subtitle: "Chakdara, Khyber Pakhtunkhwa",
-                        onPress: () {}),
-                    MainContainer(
-                        height: 90,
-                        width: 350,
-                        radius: 6,
-                        image: "assets/icons/hazara.png",
-                        title: "Hazara University",
-                        subtitle: "Mansehra, Khyber Pakhtunkhwa",
-                        onPress: () {}),
-                    MainContainer(
-                        height: 90,
-                        width: 350,
-                        radius: 6,
-                        image: "assets/icons/abdulwalikhan.png",
-                        title: "Abdul Wali Khan University",
-                        subtitle: "Mardan, Khyber Pakhtunkhwa",
-                        onPress: () {}),
-                    MainContainer(
-                        height: 90,
-                        width: 350,
-                        radius: 6,
-                        image: "assets/icons/qurtuba.png",
-                        title: "Qurtuba University",
-                        subtitle: "Peshawar, Khyber Pakhtunkhwa",
-                        onPress: () {}),
-                    MainContainer(
-                        height: 90,
-                        width: 350,
-                        radius: 6,
-                        image: "assets/icons/icu.png",
-                        title: "Islamia College University",
-                        subtitle: "Peshawar, Khyber Pakhtunkhwa",
-                        onPress: () {}),
-                    MainContainer(
-                        height: 90,
-                        width: 350,
-                        radius: 6,
-                        image: "assets/icons/swat.png",
-                        title: "University of Swat",
-                        subtitle: "Swat, Khyber Pakhtunkhwa",
-                        onPress: () {}),
-                    MainContainer(
-                        height: 90,
-                        width: 350,
-                        radius: 6,
-                        image: "assets/icons/iqra.png",
-                        title: "Iqra National University",
-                        subtitle: "Peshawar, Khyber Pakhtunkhwa",
-                        onPress: () {}),
-                    MainContainer(
-                        height: 90,
-                        width: 350,
-                        radius: 6,
-                        image: "assets/icons/gik.png",
-                        title: "Preston University",
-                        subtitle: "Peshawar, Khyber Pakhtunkhwa",
-                        onPress: () {}),
-                  ],
-                ),
-                ListView(
-                  scrollDirection: Axis.vertical,
-                  children: [
-                    MainContainer(
-                        height: 90,
-                        width: 350,
-                        radius: 6,
-                        image: "assets/icons/gik.png",
-                        title: "Ghulam Ishaq Khan",
-                        subtitle: "Topi, Khyber Pukhtunkhwa",
-                        onPress: () {}),
-                    MainContainer(
-                        height: 90,
-                        width: 350,
-                        radius: 6,
-                        image: "assets/icons/paf.png",
-                        title: "Pak Austria Fachhochschule ",
-                        subtitle: "Mang, Haripur",
-                        onPress: () {}),
-                    MainContainer(
-                        height: 90,
-                        width: 350,
-                        radius: 6,
-                        image: "assets/icons/malakand.png",
-                        title: "University of Malakand",
-                        subtitle: "Chakdara, Khyber Pakhtunkhwa",
-                        onPress: () {}),
-                    MainContainer(
-                        height: 90,
-                        width: 350,
-                        radius: 6,
-                        image: "assets/icons/hazara.png",
-                        title: "Hazara University",
-                        subtitle: "Mansehra, Khyber Pakhtunkhwa",
-                        onPress: () {}),
-                    MainContainer(
-                        height: 90,
-                        width: 350,
-                        radius: 6,
-                        image: "assets/icons/abdulwalikhan.png",
-                        title: "Abdul Wali Khan University",
-                        subtitle: "Mardan, Khyber Pakhtunkhwa",
-                        onPress: () {}),
-                    MainContainer(
-                        height: 90,
-                        width: 350,
-                        radius: 6,
-                        image: "assets/icons/qurtuba.png",
-                        title: "Qurtuba University",
-                        subtitle: "Peshawar, Khyber Pakhtunkhwa",
-                        onPress: () {}),
-                    MainContainer(
-                        height: 90,
-                        width: 350,
-                        radius: 6,
-                        image: "assets/icons/icu.png",
-                        title: "Islamia College University",
-                        subtitle: "Peshawar, Khyber Pakhtunkhwa",
-                        onPress: () {}),
-                    MainContainer(
-                        height: 90,
-                        width: 350,
-                        radius: 6,
-                        image: "assets/icons/swat.png",
-                        title: "University of Swat",
-                        subtitle: "Swat, Khyber Pakhtunkhwa",
-                        onPress: () {}),
-                    MainContainer(
-                        height: 90,
-                        width: 350,
-                        radius: 6,
-                        image: "assets/icons/iqra.png",
-                        title: "Iqra National University",
-                        subtitle: "Peshawar, Khyber Pakhtunkhwa",
-                        onPress: () {}),
-                    MainContainer(
-                        height: 90,
-                        width: 350,
-                        radius: 6,
-                        image: "assets/icons/gik.png",
-                        title: "Preston University",
-                        subtitle: "Peshawar, Khyber Pakhtunkhwa",
-                        onPress: () {}),
-                  ],
-                ),
-              ]),
             ),
           ],
+        ),
+        key: scaffoldKey,
+        body: NestedScrollView(
+            headerSliverBuilder: (_, innerBoxIsScrolled) {
+              return [
+                SliverAppBar(
+                    automaticallyImplyLeading: false,
+                    pinned: true,
+                    floating: true,
+                    backgroundColor: Colors.white,
+                    expandedHeight: 300,
+                    flexibleSpace: FlexibleSpace(
+                      height: height,
+                      width: width,
+                      userName: userData.name,
+                      userLevel: userData.level,
+                      onPress: () {
+                        Get.to(() => SearchScreen(admissions: admissions));
+                      },
+                    ),
+
+                    ///  -- Tabs
+                    bottom: const TTabBar(
+                      tabs: [
+                        Tab(
+                          child: Text(
+                            ' All ',
+                            style: TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                        Tab(
+                          child: Text(
+                            textAlign: TextAlign.start,
+                            'Top Universities',
+                            style: TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                        Tab(
+                          child: Text(
+                            'Opened Admissions',
+                            style: TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                        Tab(
+                          child: Text(
+                            'International Scholarships',
+                            style: TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      ],
+                    )),
+              ];
+            },
+
+            /// -- Body
+            body: _hasInternet
+                ? StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('Universities')
+                        .snapshots(),
+                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return const Center(child: Text('Error'));
+                      } else if (snapshot.error is SocketException) {
+                        return const Center(
+                            child: Text('No Internet Connection'));
+                      } else {
+                        try {
+                          bool found = false;
+                          admissions = snapshot.data!.docs.map((doc) {
+                            return Admission.fromJson(
+                                doc.data() as Map<String, dynamic>);
+                          }).toList();
+
+                          for (var admission in admissions) {
+                            if (admission.admission == true) {
+                              found = true;
+                            }
+                          }
+                          return TabBarView(children: [
+                            ListView.builder(
+                              itemCount: admissions.length,
+                              itemBuilder: (context, index) {
+                                return MainContainer(
+                                    image: admissions[index].logo,
+                                    title: admissions[index].name,
+                                    subtitle: admissions[index].location,
+                                    onPress: () {
+                                      Get.to(() => const DescriptionScreen(),
+                                          arguments: admissions[index]);
+                                    });
+                              },
+                            ),
+                            ListView.builder(
+                              itemCount: admissions.length,
+                              itemBuilder: (context, index) {
+                                if (admissions[index].rank <= 10 &&
+                                    admissions[index].rank >= 1) {
+                                  return MainContainer(
+                                      image: admissions[index].logo,
+                                      title: admissions[index].name,
+                                      subtitle: admissions[index].location,
+                                      onPress: () {
+                                        Get.to(() => const DescriptionScreen(),
+                                            arguments: admissions[index]);
+                                      });
+                                }
+                                return null;
+                              },
+                            ),
+
+                            found
+                                ? ListView.builder(
+                                    itemCount: admissions.length,
+                                    itemBuilder: (context, index) {
+                                      return admissions[index].admission
+                                          ? MainContainer(
+                                              image: admissions[index].logo,
+                                              title: admissions[index].name,
+                                              subtitle:
+                                                  admissions[index].location,
+                                              onPress: () {
+                                                Get.to(
+                                                    () =>
+                                                        const DescriptionScreen(),
+                                                    arguments:
+                                                        admissions[index]);
+                                              })
+                                          : const SizedBox();
+                                    })
+                                : const Center(
+                                    child: Text(
+                                    'Admissions are Closed now ',
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.red),
+                                  )),
+                            //-------------------------------
+
+                            SizedBox(
+                              width: double.infinity,
+                              height: double.infinity,
+                              child: StreamBuilder<QuerySnapshot>(
+                                  stream: FirebaseFirestore.instance
+                                      .collection('Scholarships')
+                                      .snapshots(),
+                                  builder: (context,
+                                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return const Center(
+                                          child: CircularProgressIndicator());
+                                    } else if (snapshot.hasError) {
+                                      return Center(
+                                          child:
+                                              Text('Error: ${snapshot.error}'));
+                                    } else if (snapshot.data!.size
+                                        .isLowerThan(1)) {
+                                      return const Center(
+                                          child: Text(
+                                        'No Scholarships Available Now ',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.red),
+                                      ));
+                                    } else {
+                                      List<Scholarship> scholarships =
+                                          snapshot.data!.docs.map((doc) {
+                                        return Scholarship.fromJson(
+                                            doc.data() as Map<String, dynamic>);
+                                      }).toList();
+                                      bool rev = true;
+                                      if (scholarships.length == 1) {
+                                        rev = false;
+                                      }
+                                      return ListView.builder(
+                                        reverse: rev,
+                                        itemCount: scholarships.length,
+                                        itemBuilder: (context, index) {
+                                          return ScholarshipCard(
+                                            scholarshipName:
+                                                scholarships[index].name,
+                                            provider:
+                                                scholarships[index].provider,
+                                            deadline:
+                                                scholarships[index].deadline,
+                                            description:
+                                                scholarships[index].description,
+                                            link: scholarships[index].link,
+                                            date: scholarships[index].date,
+                                            userLevel:
+                                                userData.level.toString(),
+                                            onPress: () {
+                                              FireStoreServices()
+                                                  .deleteScholarship(
+                                                      scholarships[index]
+                                                          .scholarshipId,
+                                                      context);
+                                            },
+                                          );
+                                        },
+                                      );
+                                    }
+                                  }),
+                            ),
+                          ]);
+                        } catch (e) {
+                          throw e.toString();
+                        }
+                      }
+                    },
+                  )
+                : const Center(child: Text('No Internet Connection'))),
+        drawer: CustomDrawer(
+          userName: userData.name.toString(),
+          userEmail: userData.email.toString(),
+          userLevel: userData.level.toString(),
         ),
       ),
     );

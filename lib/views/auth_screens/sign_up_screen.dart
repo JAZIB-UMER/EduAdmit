@@ -2,12 +2,14 @@ import 'package:edu_admit/resources/components/button.dart';
 import 'package:edu_admit/resources/components/Signin_screen_container.dart';
 import 'package:edu_admit/services/auth_services/firebase_services.dart';
 import 'package:edu_admit/services/auth_services/shared_pref_services.dart';
+import 'package:edu_admit/utils/colors.dart';
 import 'package:edu_admit/utils/utilities.dart';
 import 'package:edu_admit/view_model/auth_view_model.dart';
+import 'package:edu_admit/views/auth_screens/login_screen.dart';
 import 'package:edu_admit/views/main_screens/main_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-
 import '../../resources/components/button2.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -40,46 +42,55 @@ class _SignUpScreenState extends State<SignUpScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 80, right: 90),
-              child: SizedBox(
-                  height: height * 0.06,
-                  width: width * 0.6,
-                  child: Text(
-                    "Let's Get Started",
-                    style: Theme.of(context)
-                        .textTheme
-                        .headlineMedium!
-                        .copyWith(fontWeight: FontWeight.bold),
-                  )),
+            SizedBox(
+              height: height * 0.1,
             ),
             Padding(
-              padding: const EdgeInsets.only(right: 90),
-              child: SizedBox(
-                  height: height * 0.07,
-                  width: width * 0.6,
-                  child: Text(
-                    "Create an account to continue",
-                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                        color: const Color(0xffB3B3B3),
-                        fontWeight: FontWeight.bold),
-                  )),
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      textAlign: TextAlign.start,
+                      "Let's Get Started",
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineMedium!
+                          .copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      "Create an account to continue",
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          color: const Color(0xffB3B3B3),
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              height: height * 0.05,
             ),
             SigninScreenContainer(
+              obscure: false,
               controller: _userNameController,
               title: 'Username',
-              icon: Icon(Icons.person_2_outlined),
+              icon: const Icon(Icons.person_2_outlined),
             ),
             const SizedBox(height: 5),
             SigninScreenContainer(
+              obscure: false,
               title: 'Email',
-              icon: Icon(Icons.email_outlined),
+              icon: const Icon(Icons.email_outlined),
               controller: _emailController,
             ),
             const SizedBox(height: 5),
             SigninScreenContainer(
-              title: 'Password( at least 8 character )',
-              icon: Icon(Icons.lock_open_outlined),
+              obscure: true,
+              title: 'Password(min 8 character)',
+              icon: const Icon(Icons.lock_open_outlined),
               controller: _passwordController,
             ),
             const SizedBox(height: 25),
@@ -104,6 +115,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           'Password length is short', Colors.red, context);
                     } else {
                       object.setLoading(true);
+                      FocusScope.of(context).unfocus();
                       await _myRepo
                           .signUp(
                               context,
@@ -111,14 +123,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               _passwordController.text,
                               _userNameController.text)
                           .then((value) async {
-                        await SharedPreferencesHelper()
-                            .setData(_userNameController.text.toString());
+                        await SharedPreferencesHelper().setData(
+                            _userNameController.text.toString(),
+                            _emailController.text.toString());
                         _emailController.clear();
                         _passwordController.clear();
                         _userNameController.clear();
 
+                        //await NotificationServices().subscribeToTopic();
+
                         object.setLoading(false);
-                        Get.off(MainScreen());
+                        Get.offAll(() => const MainScreen());
                       }).onError((error, stackTrace) {
                         object.setLoading(false);
                         Utils.flushBarErrorMessage(
@@ -141,7 +156,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 width: width * 0.84,
                 title: 'Sign in with Google',
                 radius: 16,
-                onPress: () {},
+                onPress: () async {
+                  await FireBaseServices().signInWithGoogle().then((value) {
+                    Get.offAll(const MainScreen());
+                  }).onError((error, stackTrace) {
+                    Fluttertoast.showToast(msg: error.toString());
+                  });
+                },
                 image: 'assets/icons/google.png'),
             const SizedBox(height: 24),
             Button2(
@@ -149,7 +170,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 width: width * 0.84,
                 title: 'Sign in with Facebook',
                 radius: 16,
-                onPress: () {},
+                onPress: () async {
+                  //await FireBaseServices().signInWithFacebook();
+                },
                 image: 'assets/icons/facebook.png'),
             SizedBox(height: height * 0.01),
             SizedBox(
@@ -163,16 +186,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     style: Theme.of(context)
                         .textTheme
                         .bodyLarge!
-                        .copyWith(fontWeight: FontWeight.bold),
+                        .copyWith(fontWeight: FontWeight.normal),
                   ),
                   TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        "Login",
-                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                            color: const Color(0xffF43C3E),
-                            fontWeight: FontWeight.bold),
-                      ))
+                    onPressed: () => Get.to(() => const LoginScreen()),
+                    child: Text(
+                      "Login",
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          color: appThemeColor, fontWeight: FontWeight.bold),
+                    ),
+                  ),
                 ],
               ),
             )

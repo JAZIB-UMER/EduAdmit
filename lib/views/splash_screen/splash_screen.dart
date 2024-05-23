@@ -1,6 +1,4 @@
-import 'package:edu_admit/views/auth_screens/sign_up_screen.dart';
 import 'package:edu_admit/views/splash_screen/splash_services.dart';
-import 'package:edu_admit/views/starting_screen/startingScreen.dart';
 
 import 'package:flutter/material.dart';
 

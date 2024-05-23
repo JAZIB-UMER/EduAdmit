@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 
 class ImageContainer extends StatelessWidget {
   final double height;
-  final double width;
+
   final double radius;
   final String image;
   final VoidCallback onPress;
   const ImageContainer({
     super.key,
     required this.height,
-    required this.width,
     required this.radius,
     required this.image,
     required this.onPress,
@@ -20,10 +19,9 @@ class ImageContainer extends StatelessWidget {
     return InkWell(
       onTap: onPress,
       child: Padding(
-        padding: const EdgeInsets.only(bottom: 10),
+        padding: const EdgeInsets.only(left: 20, top: 5, bottom: 5),
         child: Container(
           height: height,
-          width: width,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(radius),
             border: Border.all(

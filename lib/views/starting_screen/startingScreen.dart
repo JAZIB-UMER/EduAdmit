@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:edu_admit/views/splash_screen/splash_services.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:get/get.dart';
 import 'onboarding_controller.dart';
 
@@ -15,17 +15,16 @@ class StartingScreen extends StatefulWidget {
 class _StartingScreenState extends State<StartingScreen> {
   @override
   Widget build(BuildContext context) {
-    SplashServices _splashServices = SplashServices();
-
-    @override
-    void initState() {
-      _splashServices.isLogin(context);
-      super.initState();
-    }
-
     dynamic height = MediaQuery.of(context).size.height;
     dynamic width = MediaQuery.of(context).size.width;
     final controller = Get.put(OnBoardingController());
+
+    final List<String> images = [
+      'assets/icons/Nust.jpg',
+      'assets/icons/University_of_peshawer.webp',
+      'assets/icons/Fast_Karachi.png',
+      'assets/icons/paf_bg.jpg',
+    ];
 
     final List<String> titles = [
       'Empowering Dreams,\n Enabling Futures.',
@@ -44,11 +43,18 @@ class _StartingScreenState extends State<StartingScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/icons/bg-image.png'),
-                fit: BoxFit.cover,
+          AnimatedContainer(
+            duration: const Duration(microseconds: 500),
+            curve: Curves.easeIn,
+            child: Obx(
+              () => Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(
+                        images[controller.carouselCurrentIndex.value]),
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
             ),
           ),
