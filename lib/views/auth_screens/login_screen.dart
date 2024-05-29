@@ -1,10 +1,14 @@
+import 'dart:ui';
+
 import 'package:edu_admit/services/auth_services/firebase_services.dart';
 import 'package:edu_admit/services/auth_services/shared_pref_services.dart';
 import 'package:edu_admit/utils/colors.dart';
 
 import 'package:edu_admit/utils/utilities.dart';
 import 'package:edu_admit/view_model/auth_view_model.dart';
+import 'package:edu_admit/views/auth_screens/forgot_pass_screen.dart';
 import 'package:edu_admit/views/auth_screens/sign_up_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -42,21 +46,38 @@ class _LoginScreenState extends State<LoginScreen> {
       resizeToAvoidBottomInset: false,
       body: Column(
         children: [
+          SizedBox(height: height * 0.04),
           Image.asset('assets/icons/eduadmitlogo.png'),
-          SigninScreenContainer(
+          SignInScreenContainer(
             obscure: false,
             title: 'Email',
-            icon: Icon(Icons.person_2_outlined),
+            icon: const Icon(Icons.person_2_outlined),
             controller: _emailController,
           ),
-          const SizedBox(height: 5),
-          SigninScreenContainer(
+          SignInScreenContainer(
             obscure: true,
             title: 'Password',
-            icon: Icon(Icons.lock_open_outlined),
+            icon: const Icon(Icons.lock_open_outlined),
             controller: _passwordController,
           ),
-          const SizedBox(height: 25),
+          Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: Align(
+              alignment: Alignment.topRight,
+              child: TextButton(
+                  onPressed: () {
+                    Get.to(() => const ForgotPasswordScreen());
+                  },
+                  child: const Text(
+                    "Forgot Password",
+                    style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  )),
+            ),
+          ),
           Obx(() => Button(
                 loading: object.loading.value,
                 height: height * 0.07,
@@ -103,21 +124,20 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
+                const Text(
                   "Don't have an account?",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(fontWeight: FontWeight.normal),
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
                 ),
                 TextButton(
                     onPressed: () {
                       Get.to(() => const SignUpScreen());
                     },
-                    child: Text(
+                    child: const Text(
                       "Sign Up",
-                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          color: appThemeColor, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: appThemeColor),
                     ))
               ],
             ),

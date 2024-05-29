@@ -45,8 +45,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
             SizedBox(
               height: height * 0.1,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 30),
               child: Align(
                 alignment: Alignment.topLeft,
                 child: Column(
@@ -55,16 +55,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Text(
                       textAlign: TextAlign.start,
                       "Let's Get Started",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineMedium!
-                          .copyWith(fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
                     ),
                     Text(
                       "Create an account to continue",
-                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          color: const Color(0xffB3B3B3),
-                          fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xffB3B3B3)),
                     ),
                   ],
                 ),
@@ -73,21 +72,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
             SizedBox(
               height: height * 0.05,
             ),
-            SigninScreenContainer(
+            SignInScreenContainer(
               obscure: false,
               controller: _userNameController,
               title: 'Username',
               icon: const Icon(Icons.person_2_outlined),
             ),
             const SizedBox(height: 5),
-            SigninScreenContainer(
+            SignInScreenContainer(
               obscure: false,
               title: 'Email',
               icon: const Icon(Icons.email_outlined),
               controller: _emailController,
             ),
             const SizedBox(height: 5),
-            SigninScreenContainer(
+            SignInScreenContainer(
               obscure: true,
               title: 'Password(min 8 character)',
               icon: const Icon(Icons.lock_open_outlined),
@@ -181,19 +180,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     "Already have an account?",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge!
-                        .copyWith(fontWeight: FontWeight.normal),
+                    style:
+                        TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
                   ),
                   TextButton(
                     onPressed: () => Get.to(() => const LoginScreen()),
-                    child: Text(
+                    child: const Text(
                       "Login",
-                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          color: appThemeColor, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: appThemeColor),
                     ),
                   ),
                 ],

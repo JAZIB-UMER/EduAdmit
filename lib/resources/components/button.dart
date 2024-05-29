@@ -1,3 +1,4 @@
+import 'package:edu_admit/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 class Button extends StatelessWidget {
@@ -26,7 +27,7 @@ class Button extends StatelessWidget {
         width: width,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(radius),
-          color: const Color(0xffF43C3E),
+          color: appThemeColor,
         ),
         child: Center(
             child: loading

@@ -1,5 +1,6 @@
 import 'package:edu_admit/data_model/universities_model.dart';
 import 'package:edu_admit/resources/components/button.dart';
+import 'package:edu_admit/services/url_launcher/url_launcher.dart';
 import 'package:edu_admit/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -33,6 +34,29 @@ class DescriptionScreen extends StatelessWidget {
                       child: Image.network(
                         admission.bgImage,
                         fit: BoxFit.fitHeight,
+                        loadingBuilder: (BuildContext context, Widget child,
+                            ImageChunkEvent? loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          } else {
+                            return Center(
+                              child: CircularProgressIndicator(
+                                value: loadingProgress.expectedTotalBytes !=
+                                        null
+                                    ? loadingProgress.cumulativeBytesLoaded /
+                                        loadingProgress.expectedTotalBytes!
+                                    : null,
+                              ),
+                            );
+                          }
+                        },
+                        errorBuilder: (BuildContext context, Object error,
+                            StackTrace? stackTrace) {
+                          return Image.network(
+                            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTeMDCHvN_nECfAK2i5ctJ7NDlcsUg6epeQPA&s",
+                            fit: BoxFit.fitHeight,
+                          );
+                        },
                       ),
                     ),
                   ),
@@ -210,7 +234,12 @@ class DescriptionScreen extends StatelessWidget {
                                 fontWeight: FontWeight.bold, fontSize: 15),
                           ),
                           leading: const Icon(Icons.phone_in_talk),
-                          trailing: Text(admission.phoneNo),
+                          trailing: InkWell(
+                              onTap: () async {
+                                await launchDialPad(
+                                    admission.phoneNo.toString());
+                              },
+                              child: Text(admission.phoneNo)),
                         ),
                       ),
                       Align(
@@ -222,9 +251,14 @@ class DescriptionScreen extends StatelessWidget {
                                 fontWeight: FontWeight.bold, fontSize: 15),
                           ),
                           leading: const Icon(Icons.email_outlined),
-                          trailing: Text(
-                            admission.email,
-                            style: const TextStyle(color: Colors.blue),
+                          trailing: InkWell(
+                            onTap: () async {
+                              await launchGmail(admission.email);
+                            },
+                            child: Text(
+                              admission.email,
+                              style: const TextStyle(color: Colors.blue),
+                            ),
                           ),
                         ),
                       ),
@@ -251,7 +285,9 @@ class DescriptionScreen extends StatelessWidget {
                     loading: false,
                   ),
                   InkWell(
-                    onTap: () {},
+                    onTap: () async {
+                      await launchDialPad(admission.phoneNo.toString());
+                    },
                     child: Container(
                       height: height * 0.06,
                       width: width * 0.15,
@@ -261,7 +297,7 @@ class DescriptionScreen extends StatelessWidget {
                       ),
                       child: const Center(
                           child: Icon(
-                        Icons.bookmark_border,
+                        Icons.phone,
                         color: Colors.white,
                       )),
                     ),

@@ -1,12 +1,13 @@
+import 'package:edu_admit/utils/colors.dart';
 import 'package:flutter/material.dart';
 
-class SigninScreenContainer extends StatelessWidget {
+class SignInScreenContainer extends StatelessWidget {
   final String title;
   final Icon icon;
   final bool obscure;
   final TextEditingController controller;
 
-  const SigninScreenContainer({
+  const SignInScreenContainer({
     super.key,
     required this.title,
     required this.icon,
@@ -19,7 +20,9 @@ class SigninScreenContainer extends StatelessWidget {
     dynamic height = MediaQuery.of(context).size.height;
     dynamic width = MediaQuery.of(context).size.width;
     return Padding(
-      padding: const EdgeInsets.only(left: 34, right: 34),
+      padding: EdgeInsets.symmetric(
+        horizontal: width * 0.05,
+      ),
       child: SizedBox(
         height: height * 0.09,
         width: width * 0.84,
@@ -32,7 +35,7 @@ class SigninScreenContainer extends StatelessWidget {
               prefixIcon: icon,
               hintStyle: const TextStyle(fontSize: 15),
               focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Color(0xffF43C3E)),
+                  borderSide: const BorderSide(color: appThemeColor),
                   borderRadius: BorderRadius.circular(16)),
               enabledBorder: OutlineInputBorder(
                   borderSide: const BorderSide(color: Color(0xffD8D8D8)),

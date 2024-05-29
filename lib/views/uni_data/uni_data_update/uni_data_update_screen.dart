@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edu_admit/data_model/universities_model.dart';
 import 'package:edu_admit/utils/colors.dart';
@@ -36,8 +38,8 @@ class UniversityDataUpdateScreen extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (snapshot.error is SocketException) {
+              return const Center(child: Text('Error: No Internet'));
             } else {
               List<Admission> admissions = snapshot.data!.docs.map((doc) {
                 return Admission.fromJson(doc.data() as Map<String, dynamic>);

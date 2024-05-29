@@ -9,7 +9,9 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 import 'firebase_options.dart';
+import 'view_model/providers/bookData.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +23,14 @@ void main() async {
   ]);
   final prefs = SharedPreferencesHelper();
   await prefs.init();
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => BookData()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 @pragma('vm:entry-point')

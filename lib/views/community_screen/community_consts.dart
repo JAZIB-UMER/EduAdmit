@@ -38,33 +38,38 @@ class MessageBubble extends StatelessWidget {
                 : const Color(0xffF43C3E).withOpacity(0.8),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    sender,
-                    style: isMe
-                        ? const TextStyle(
-                            fontSize: 12.0,
-                            color: Colors.black54,
-                          )
-                        : const TextStyle(
-                            fontSize: 12,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 2, horizontal: 20.0),
-                    child: Text(
-                      text,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
+              child: Container(
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.7,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      sender,
+                      style: isMe
+                          ? const TextStyle(
+                              fontSize: 12.0,
+                              color: Colors.black54,
+                            )
+                          : const TextStyle(
+                              fontSize: 12,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 2, horizontal: 20.0),
+                      child: Text(
+                        text,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

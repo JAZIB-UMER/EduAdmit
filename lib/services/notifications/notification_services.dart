@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:math';
 import 'package:edu_admit/services/auth_services/firebase_services.dart';
 import 'package:edu_admit/utils/utilities.dart';
-import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:edu_admit/views/main_screens/main_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';

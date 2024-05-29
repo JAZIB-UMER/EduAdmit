@@ -25,6 +25,7 @@ class FireBaseServices {
           .signInWithEmailAndPassword(email: email, password: password)
           .then((value) async {
         String token = await NotificationServices().getDeviceToken();
+        print(token.toString());
         storeDeviceToken(token);
         SessionController().userId = value.user!.uid.toString();
       });
@@ -185,5 +186,16 @@ class FireBaseServices {
     } catch (e) {
       throw e.toString();
     }
+  }
+
+  Future<void> forgotPassword(BuildContext context, String email) async {
+    //setloading(true);
+    _auth
+        .sendPasswordResetEmail(email: email)
+        .then((value) {})
+        .onError((error, stackTrace) {
+      // setloading(false);
+      // Utils.toastMessage(error.toString());
+    });
   }
 }

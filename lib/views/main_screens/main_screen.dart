@@ -9,6 +9,7 @@ import 'package:edu_admit/resources/drawer/drawer.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:edu_admit/services/data_services/firestore_services.dart';
 import 'package:edu_admit/services/notifications/notification_services.dart';
+import 'package:edu_admit/view_model/providers/bookData.dart';
 import 'package:edu_admit/views/description_screen/description_screen.dart';
 import 'package:edu_admit/views/main_screens/components/components.dart';
 import 'package:edu_admit/views/plans_screen/packages_screen.dart';
@@ -16,6 +17,7 @@ import 'package:edu_admit/views/scholarships_screen/scholarships_card.dart';
 import 'package:edu_admit/views/search_screen/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import '../../services/auth_services/shared_pref_services.dart';
 
 class MainScreen extends StatefulWidget {
@@ -41,6 +43,13 @@ class _MainScreenState extends State<MainScreen> {
     notificationServices.getDeviceToken().then((value) {
       debugPrint('Device Token : $value');
     }).onError((error, stackTrace) {});
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      var bookData = Provider.of<BookData>(context, listen: false);
+      bookData.addTrending();
+      bookData.addFantasy();
+      bookData.addadventure();
+      bookData.addnovels();
+    });
     super.initState();
   }
 
@@ -178,18 +187,18 @@ class _MainScreenState extends State<MainScreen> {
                             ListView.builder(
                               itemCount: admissions.length,
                               itemBuilder: (context, index) {
-                                if (admissions[index].rank <= 10 &&
-                                    admissions[index].rank >= 1) {
-                                  return MainContainer(
-                                      image: admissions[index].logo,
-                                      title: admissions[index].name,
-                                      subtitle: admissions[index].location,
-                                      onPress: () {
-                                        Get.to(() => const DescriptionScreen(),
-                                            arguments: admissions[index]);
-                                      });
-                                }
-                                return null;
+                                return (admissions[index].rank <= 10 &&
+                                        admissions[index].rank >= 1)
+                                    ? MainContainer(
+                                        image: admissions[index].logo,
+                                        title: admissions[index].name,
+                                        subtitle: admissions[index].location,
+                                        onPress: () {
+                                          Get.to(
+                                              () => const DescriptionScreen(),
+                                              arguments: admissions[index]);
+                                        })
+                                    : const SizedBox();
                               },
                             ),
 
@@ -250,17 +259,15 @@ class _MainScreenState extends State<MainScreen> {
                                             color: Colors.red),
                                       ));
                                     } else {
-                                      List<Scholarship> scholarships =
-                                          snapshot.data!.docs.map((doc) {
+                                      List<Scholarship> scholarships = snapshot
+                                          .data!.docs.reversed
+                                          .map((doc) {
                                         return Scholarship.fromJson(
                                             doc.data() as Map<String, dynamic>);
                                       }).toList();
-                                      bool rev = true;
-                                      if (scholarships.length == 1) {
-                                        rev = false;
-                                      }
+
                                       return ListView.builder(
-                                        reverse: rev,
+                                        reverse: false,
                                         itemCount: scholarships.length,
                                         itemBuilder: (context, index) {
                                           return ScholarshipCard(
@@ -301,6 +308,7 @@ class _MainScreenState extends State<MainScreen> {
           userName: userData.name.toString(),
           userEmail: userData.email.toString(),
           userLevel: userData.level.toString(),
+          internet: _hasInternet,
         ),
       ),
     );
