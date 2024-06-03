@@ -186,18 +186,6 @@ class PackagesScreen extends StatelessWidget {
                                   textColor: Colors.white,
                                   iconColor: Colors.white),
                               ReuseableRow(
-                                  title: 'Change Background',
-                                  textColor: Colors.white,
-                                  iconColor: Colors.white),
-                              ReuseableRow(
-                                  title: 'Dark mode',
-                                  textColor: Colors.white,
-                                  iconColor: Colors.white),
-                              ReuseableRow(
-                                  title: 'Multiple Accounts',
-                                  textColor: Colors.white,
-                                  iconColor: Colors.white),
-                              ReuseableRow(
                                   title: 'No Ads',
                                   textColor: Colors.white,
                                   iconColor: Colors.white),
