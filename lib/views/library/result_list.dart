@@ -1,7 +1,6 @@
 import 'package:edu_admit/resources/widgets/book_list_tile.dart';
 import 'package:edu_admit/view_model/providers/bookData.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 class ResultList extends StatefulWidget {

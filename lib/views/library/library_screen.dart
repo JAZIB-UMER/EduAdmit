@@ -1,9 +1,7 @@
 import 'package:edu_admit/resources/widgets/book_tile.dart';
 import 'package:edu_admit/resources/widgets/cat_tag.dart';
-
 import 'package:edu_admit/resources/widgets/search_bar.dart';
 import 'package:edu_admit/view_model/providers/bookData.dart';
-import 'package:edu_admit/views/library/result_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,7 +12,6 @@ class LibraryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController controller = TextEditingController();
     final booksData = Provider.of<BookData>(context);
     final trendingBooks = booksData.trending;
     final novels = booksData.novels;
@@ -51,23 +48,23 @@ class LibraryScreen extends StatelessWidget {
               ),
               CatTag(
                 color: Colors.green,
-                tag: '🔮  Fantasy',
-                url: 'Fantasy',
+                tag: '🔮  Physics',
+                url: 'Physics',
               )
             ],
           ),
           const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               CatTag(
                 color: Colors.teal,
-                tag: '🔪  True Crime',
-                url: 'True Crime',
+                tag: '🔪  Chemistry',
+                url: 'Chemistry',
               ),
               CatTag(
                 color: Colors.pink,
-                tag: '🔬 Science Fiction Fantasy',
-                url: 'Science Fiction Fantasy',
+                tag: '🔬 Programming',
+                url: 'Programming',
               )
             ],
           ),
@@ -78,7 +75,7 @@ class LibraryScreen extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
-          Container(
+          SizedBox(
             height: MediaQuery.of(context).size.height * 0.36,
             child: ListView.builder(
                 shrinkWrap: true,
@@ -92,13 +89,13 @@ class LibraryScreen extends StatelessWidget {
                     )),
           ),
           const Padding(
-            padding: const EdgeInsets.only(top: 5.0, bottom: 10, left: 16),
+            padding: EdgeInsets.only(top: 5.0, bottom: 10, left: 16),
             child: Text(
               'Adventure',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
-          Container(
+          SizedBox(
             height: MediaQuery.of(context).size.height * 0.36,
             child: ListView.builder(
                 shrinkWrap: true,

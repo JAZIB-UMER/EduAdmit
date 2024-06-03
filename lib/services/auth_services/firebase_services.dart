@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edu_admit/services/auth_services/shared_pref_services.dart';
 import 'package:edu_admit/services/auth_services/user_id.dart';
 import 'package:edu_admit/services/notifications/notification_services.dart';
+import 'package:edu_admit/utils/utilities.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,7 @@ class FireBaseServices {
           .signInWithEmailAndPassword(email: email, password: password)
           .then((value) async {
         String token = await NotificationServices().getDeviceToken();
-        print(token.toString());
+
         storeDeviceToken(token);
         SessionController().userId = value.user!.uid.toString();
       });
@@ -195,7 +196,7 @@ class FireBaseServices {
         .then((value) {})
         .onError((error, stackTrace) {
       // setloading(false);
-      // Utils.toastMessage(error.toString());
+      Utils.toastMessage(error.toString());
     });
   }
 }

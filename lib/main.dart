@@ -1,3 +1,4 @@
+import 'package:edu_admit/practicce.dart';
 import 'package:edu_admit/services/auth_services/shared_pref_services.dart';
 
 import 'package:edu_admit/views/splash_screen/splash_screen.dart';
@@ -44,7 +45,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const GetMaterialApp(
+    return GetMaterialApp(
         debugShowCheckedModeBanner: false,
         themeMode: ThemeMode.light,
         home: SplashScreen());

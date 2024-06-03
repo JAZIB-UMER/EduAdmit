@@ -1,7 +1,6 @@
 import 'package:edu_admit/view_model/providers/bookData.dart';
 import 'package:edu_admit/views/library/result_list.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 class CatTag extends StatelessWidget {
@@ -9,8 +8,7 @@ class CatTag extends StatelessWidget {
   final String tag;
   final String url;
   const CatTag(
-      {Key? key, required this.color, required this.tag, required this.url})
-      : super(key: key);
+      {super.key, required this.color, required this.tag, required this.url});
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +25,7 @@ class CatTag extends StatelessWidget {
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
         color: color,
         shadowColor: color,
+        elevation: 20.0,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
           child: Text(
@@ -34,8 +33,8 @@ class CatTag extends StatelessWidget {
             textWidthBasis: TextWidthBasis.longestLine,
             softWrap: false,
             overflow: TextOverflow.ellipsis,
-            '$tag',
-            style: TextStyle(
+            tag,
+            style: const TextStyle(
                 //  softWrap: false,
                 // overflow: TextOverflow.ellipsis,
                 color: Colors.white,
@@ -43,7 +42,6 @@ class CatTag extends StatelessWidget {
                 fontSize: 12),
           ),
         ),
-        elevation: 20.0,
       ),
     );
   }

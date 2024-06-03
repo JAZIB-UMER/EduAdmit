@@ -1,6 +1,8 @@
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'package:url_launcher/url_launcher_string.dart';
+
 Future<dynamic> launchUrlForContact(String urls) async {
   Uri url = Uri.parse(urls); // Replace this with your desired URL
   if (await canLaunchUrl(url)) {
@@ -19,21 +21,8 @@ Future<void> launchDialPad(String phoneNumber) async {
   }
 }
 
-Future<void> launchGmail(String email) async {
-  final Uri gmailLaunchUri = Uri(
-    scheme: 'https',
-    host: 'mail.google.com',
-    path: '/mail/u/0/',
-    queryParameters: {
-      'view': 'cm',
-      'fs': '1',
-      'to': email,
-    },
-  );
+Future<void> launchGmail(String emailGot) async {
+  final email = 'mailto:$emailGot';
 
-  if (await canLaunchUrl(gmailLaunchUri)) {
-    await launchUrl(gmailLaunchUri);
-  } else {
-    throw 'Could not launch $gmailLaunchUri';
-  }
+  await launchUrlString(email);
 }
